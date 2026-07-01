@@ -1,0 +1,16 @@
+{
+  "name": "WaitingForUs",
+  "short_name": "WaitingForUs",
+  "description": "Nuestras metas de ahorro en pareja",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#f8fafc",
+  "icons": [
+    {
+      "src": "/wuf-icon.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ]
+}
