@@ -34,7 +34,7 @@ export function Header({
           <Button 
             variant="ghost" 
             onClick={() => auth.signOut()}
-            className="text-slate-700 hover:bg-white/40 hover:text-slate-900 focus:ring-white/50 border border-white/50 rounded-xl hidden sm:flex shadow-sm bg-white/20"
+            className="text-slate-700 hover:bg-white/40 hover:text-slate-900 focus:ring-white/50 border border-white/50 rounded-xl flex shadow-sm bg-white/20"
           >
             Salir
           </Button>
