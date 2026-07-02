@@ -37,6 +37,7 @@ export interface Contribution {
   amount: number;
   user: string;
   createdAt: Timestamp;
+  reaction?: string;
 }
 
 export const contributionConverter = {
@@ -46,6 +47,7 @@ export const contributionConverter = {
       amount: contribution.amount,
       user: contribution.user,
       createdAt: contribution.createdAt,
+      reaction: contribution.reaction || null,
     };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot, options: any): Contribution => {
@@ -56,6 +58,7 @@ export const contributionConverter = {
       amount: data.amount,
       user: data.user,
       createdAt: data.createdAt,
+      reaction: data.reaction,
     };
   }
 };
