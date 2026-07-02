@@ -101,7 +101,7 @@ export function Timeline({ contributions, goals, allUsers = {} }: { contribution
                           ) : (
                             <button 
                               onClick={() => setActiveReactionId(contribution.id!)}
-                              className="w-6 h-6 bg-white border border-slate-200 shadow-sm rounded-full flex items-center justify-center text-slate-400 hover:text-brand-500 hover:border-brand-300 transition-colors opacity-0 group-hover:opacity-100"
+                              className="w-6 h-6 bg-white border border-slate-200 shadow-sm rounded-full flex items-center justify-center text-slate-400 hover:text-brand-500 hover:border-brand-300 transition-colors"
                               title="Reaccionar"
                             >
                               <SmilePlus className="w-3.5 h-3.5" />
