@@ -12,6 +12,7 @@ import { Wishlist } from './Wishlist';
 import { SettingsModal } from './SettingsModal';
 import { AnniversaryWidget } from './AnniversaryWidget';
 import { BirthdayWidget } from './BirthdayWidget';
+import { RouletteScreen } from './RouletteScreen';
 import { Target } from 'lucide-react';
 import { goalConverter, contributionConverter, userProfileConverter, coupleSettingsConverter, type Goal, type Contribution, type UserProfile, type CoupleSettings } from '../lib/types';
 
@@ -27,6 +28,7 @@ export default function Dashboard({ user }: { user: any }) {
   const [allUsers, setAllUsers] = useState<Record<string, UserProfile>>({});
   const [coupleSettings, setCoupleSettings] = useState<CoupleSettings | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [currentView, setCurrentView] = useState<'dashboard' | 'roulette'>('dashboard');
 
   useEffect(() => {
     const qGoals = query(collection(db, 'goals').withConverter(goalConverter), orderBy('createdAt', 'desc'));
@@ -73,9 +75,13 @@ export default function Dashboard({ user }: { user: any }) {
         username={username} 
         userProfile={userProfile} 
         onOpenSettings={() => setIsSettingsOpen(true)} 
+        currentView={currentView}
+        onNavigate={setCurrentView}
       />
 
-      {selectedGoal ? (
+      {currentView === 'roulette' ? (
+        <RouletteScreen settings={coupleSettings} />
+      ) : selectedGoal ? (
         <GoalDetail 
           goal={selectedGoal} 
           contributions={contributions.filter(c => c.goalId === selectedGoal.id)}

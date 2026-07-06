@@ -128,6 +128,7 @@ export interface CoupleSettings {
   id?: string;
   anniversaryDate: string; // ISO format YYYY-MM-DD
   linkedUsers: string[];
+  foodOptions?: string[]; // Para la Ruleta de Comida
   updatedAt: Timestamp;
 }
 
@@ -136,6 +137,7 @@ export const coupleSettingsConverter = {
     return {
       anniversaryDate: settings.anniversaryDate,
       linkedUsers: settings.linkedUsers,
+      foodOptions: settings.foodOptions || [],
       updatedAt: settings.updatedAt,
     };
   },
@@ -145,6 +147,7 @@ export const coupleSettingsConverter = {
       id: snapshot.id,
       anniversaryDate: data.anniversaryDate || '',
       linkedUsers: data.linkedUsers || [],
+      foodOptions: data.foodOptions || [],
       updatedAt: data.updatedAt,
     };
   }

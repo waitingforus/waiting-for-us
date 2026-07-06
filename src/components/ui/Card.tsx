@@ -16,6 +16,14 @@ export function CardHeader({ children, className = '' }: { children: React.React
   );
 }
 
+export function CardTitle({ children, className = '' }: { children: React.ReactNode, className?: string }) {
+  return (
+    <h3 className={`text-xl font-bold text-slate-800 ${className}`}>
+      {children}
+    </h3>
+  );
+}
+
 export function CardContent({ children, className = '' }: { children: React.ReactNode, className?: string }) {
   return (
     <div className={`p-8 ${className}`}>
