@@ -16,21 +16,42 @@ import { RouletteScreen } from './RouletteScreen';
 import { MapScreen } from './MapScreen';
 import { BottomNav } from './BottomNav';
 import { Target } from 'lucide-react';
+import { Routes, Route, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { goalConverter, contributionConverter, userProfileConverter, coupleSettingsConverter, type Goal, type Contribution, type UserProfile, type CoupleSettings } from '../lib/types';
+
+function GoalDetailWrapper({ goals, contributions, username }: any) {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const selectedGoal = goals.find((g: any) => g.id === id);
+  if (!selectedGoal) return <div>No encontrado</div>;
+  
+  return (
+    <GoalDetail 
+      goal={selectedGoal} 
+      contributions={contributions.filter((c: any) => c.goalId === id)}
+      username={username}
+      onBack={() => navigate('/')} 
+    />
+  );
+}
 
 export default function Dashboard({ user }: { user: any }) {
   const username = user?.email?.split('@')[0] || 'Usuario';
   const [goals, setGoals] = useState<Goal[]>([]);
   const [contributions, setContributions] = useState<Contribution[]>([]);
-  const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null);
-  const selectedGoal = goals.find(g => g.id === selectedGoalId) || null;
   
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [partnerProfile, setPartnerProfile] = useState<UserProfile | null>(null);
   const [allUsers, setAllUsers] = useState<Record<string, UserProfile>>({});
   const [coupleSettings, setCoupleSettings] = useState<CoupleSettings | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'roulette' | 'map'>('dashboard');
+  
+  const location = useLocation();
+  const navigate = useNavigate();
+  const currentPath = location.pathname;
+  const currentView = currentPath.startsWith('/map') ? 'map' 
+                    : currentPath.startsWith('/roulette') ? 'roulette' 
+                    : 'dashboard';
 
   useEffect(() => {
     const qGoals = query(collection(db, 'goals').withConverter(goalConverter), orderBy('createdAt', 'desc'));
@@ -78,22 +99,15 @@ export default function Dashboard({ user }: { user: any }) {
         userProfile={userProfile} 
         onOpenSettings={() => setIsSettingsOpen(true)} 
         currentView={currentView}
-        onNavigate={setCurrentView}
+        onNavigate={(view) => navigate(view === 'dashboard' ? '/' : `/${view}`)}
       />
 
-      {currentView === 'roulette' ? (
-        <RouletteScreen settings={coupleSettings} />
-      ) : currentView === 'map' ? (
-        <MapScreen username={username} allUsers={allUsers} />
-      ) : selectedGoal ? (
-        <GoalDetail 
-          goal={selectedGoal} 
-          contributions={contributions.filter(c => c.goalId === selectedGoal.id)}
-          username={username}
-          onBack={() => setSelectedGoalId(null)} 
-        />
-      ) : (
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 pb-32 sm:pb-12 animate-fade-in mt-32">
+      <Routes>
+        <Route path="/roulette" element={<RouletteScreen settings={coupleSettings} />} />
+        <Route path="/map" element={<MapScreen username={username} allUsers={allUsers} />} />
+        <Route path="/goal/:id" element={<GoalDetailWrapper goals={goals} contributions={contributions} username={username} />} />
+        <Route path="/" element={
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 pb-32 sm:pb-12 animate-fade-in mt-32">
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start mb-8">
             
@@ -116,7 +130,7 @@ export default function Dashboard({ user }: { user: any }) {
                       key={goal.id} 
                       goal={goal} 
                       contributions={contributions.filter(c => c.goalId === goal.id)}
-                      onClick={() => setSelectedGoalId(goal.id!)}
+                      onClick={() => navigate(`/goal/${goal.id}`)}
                     />
                   ))
                 )}
@@ -140,7 +154,8 @@ export default function Dashboard({ user }: { user: any }) {
           </div>
 
         </div>
-      )}
+      } />
+      </Routes>
 
       <SettingsModal 
         isOpen={isSettingsOpen} 
@@ -152,7 +167,7 @@ export default function Dashboard({ user }: { user: any }) {
 
       <BottomNav 
         currentView={currentView} 
-        onNavigate={setCurrentView} 
+        onNavigate={(view) => navigate(view === 'dashboard' ? '/' : `/${view}`)} 
         onOpenSettings={() => setIsSettingsOpen(true)} 
       />
     </>

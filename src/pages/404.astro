@@ -1,0 +1,41 @@
+---
+import App from "../components/App";
+import "../styles/global.css";
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/webp" href="/wuf-icon.webp" />
+    <link rel="apple-touch-icon" href="/wuf-icon.webp" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#f8fafc" />
+    <meta
+      name="description"
+      content="Aplicación privada para gestionar nuestras metas de ahorro compartidas."
+    />
+
+    <!-- Open Graph / Redes Sociales (Para cuando compartan el link por WhatsApp) -->
+    <meta property="og:title" content="WaitingForUs" />
+    <meta
+      property="og:description"
+      content="Nuestras metas de ahorro en pareja."
+    />
+    <meta property="og:image" content="/wuf-icon.webp" />
+
+    <!-- Leaflet CSS para el Mapa -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+
+    <title>WaitingForUs</title>
+  </head>
+  <body class="min-h-screen bg-slate-50 antialiased">
+    <App client:only="react" />
+  </body>
+</html>

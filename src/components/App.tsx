@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import Login from './Login';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import { SkeletonDashboard } from './ui/SkeletonDashboard';
 
@@ -25,5 +26,11 @@ export default function App() {
   }
 
   // Si hay usuario mostramos el Dashboard, si no, el Login
-  return user ? <Dashboard user={user} /> : <Login />;
+  return user ? (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/*" element={<Dashboard user={user} />} />
+      </Routes>
+    </BrowserRouter>
+  ) : <Login />;
 }
