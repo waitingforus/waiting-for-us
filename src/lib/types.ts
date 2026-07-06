@@ -152,3 +152,39 @@ export const coupleSettingsConverter = {
     };
   }
 };
+
+// --- Entidad: Place ---
+export interface Place {
+  id?: string;
+  title: string;
+  description: string;
+  lat: number;
+  lng: number;
+  createdBy: string;
+  createdAt: Timestamp;
+}
+
+export const placeConverter = {
+  toFirestore: (place: Place) => {
+    return {
+      title: place.title,
+      description: place.description,
+      lat: place.lat,
+      lng: place.lng,
+      createdBy: place.createdBy,
+      createdAt: place.createdAt,
+    };
+  },
+  fromFirestore: (snapshot: QueryDocumentSnapshot, options: any): Place => {
+    const data = snapshot.data({ serverTimestamps: 'estimate', ...options });
+    return {
+      id: snapshot.id,
+      title: data.title,
+      description: data.description || '',
+      lat: data.lat,
+      lng: data.lng,
+      createdBy: data.createdBy,
+      createdAt: data.createdAt,
+    };
+  }
+};

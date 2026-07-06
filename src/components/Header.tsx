@@ -1,6 +1,6 @@
 import { auth } from '../lib/firebase';
 import { Button } from './ui/Button';
-import { Settings, Dices, Home } from 'lucide-react';
+import { Settings, Dices, Home, Map } from 'lucide-react';
 import type { UserProfile } from '../lib/types';
 
 export function Header({ 
@@ -13,8 +13,8 @@ export function Header({
   username: string, 
   userProfile?: UserProfile | null,
   onOpenSettings?: () => void,
-  currentView?: 'dashboard' | 'roulette',
-  onNavigate?: (view: 'dashboard' | 'roulette') => void
+  currentView?: 'dashboard' | 'roulette' | 'map',
+  onNavigate?: (view: 'dashboard' | 'roulette' | 'map') => void
 }) {
   const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -29,27 +29,41 @@ export function Header({
         </div>
         <div className="flex items-center gap-3">
           {onNavigate && (
-            <button
-              onClick={() => onNavigate(currentView === 'dashboard' ? 'roulette' : 'dashboard')}
-              className={`hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl font-bold transition-all border shadow-sm ${
-                currentView === 'roulette' 
-                  ? 'bg-brand-500 text-white border-brand-500 hover:bg-brand-600' 
-                  : 'bg-white/40 text-slate-700 hover:bg-white border-white/50 hover:border-white'
-              }`}
-              title={currentView === 'dashboard' ? 'Ir a la Ruleta' : 'Ir al Dashboard'}
-            >
-              {currentView === 'dashboard' ? (
-                <>
-                  <Dices className="w-5 h-5" />
-                  <span className="hidden sm:inline">Ruleta</span>
-                </>
-              ) : (
-                <>
-                  <Home className="w-5 h-5" />
-                  <span className="hidden sm:inline">Dashboard</span>
-                </>
-              )}
-            </button>
+            <div className="hidden sm:flex items-center bg-white/40 border border-white/50 rounded-xl p-1 shadow-sm">
+              <button
+                onClick={() => onNavigate('dashboard')}
+                className={`flex items-center gap-2 px-4 py-1.5 rounded-lg font-bold transition-all ${
+                  currentView === 'dashboard' 
+                    ? 'bg-brand-500 text-white shadow-md' 
+                    : 'text-slate-700 hover:bg-white/50'
+                }`}
+              >
+                <Home className="w-4 h-4" />
+                <span>Dashboard</span>
+              </button>
+              <button
+                onClick={() => onNavigate('roulette')}
+                className={`flex items-center gap-2 px-4 py-1.5 rounded-lg font-bold transition-all ${
+                  currentView === 'roulette' 
+                    ? 'bg-brand-500 text-white shadow-md' 
+                    : 'text-slate-700 hover:bg-white/50'
+                }`}
+              >
+                <Dices className="w-4 h-4" />
+                <span>Ruleta</span>
+              </button>
+              <button
+                onClick={() => onNavigate('map')}
+                className={`flex items-center gap-2 px-4 py-1.5 rounded-lg font-bold transition-all ${
+                  currentView === 'map' 
+                    ? 'bg-brand-500 text-white shadow-md' 
+                    : 'text-slate-700 hover:bg-white/50'
+                }`}
+              >
+                <Map className="w-4 h-4" />
+                <span>Lugares</span>
+              </button>
+            </div>
           )}
 
           <button 

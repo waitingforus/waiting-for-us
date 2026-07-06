@@ -1,9 +1,8 @@
-import React from 'react';
-import { Home, Dices, Settings } from 'lucide-react';
+import { Home, Dices, Settings, Map } from 'lucide-react';
 
 interface BottomNavProps {
-  currentView: 'dashboard' | 'roulette';
-  onNavigate: (view: 'dashboard' | 'roulette') => void;
+  currentView: 'dashboard' | 'roulette' | 'map';
+  onNavigate: (view: 'dashboard' | 'roulette' | 'map') => void;
   onOpenSettings: () => void;
 }
 
@@ -37,6 +36,20 @@ export function BottomNav({ currentView, onNavigate, onOpenSettings }: BottomNav
             <Dices className="w-6 h-6" />
           </div>
           <span className="text-[10px] font-bold">Ruleta</span>
+        </button>
+
+        <button
+          onClick={() => onNavigate('map')}
+          className={`flex flex-col items-center gap-1 p-2 w-20 rounded-2xl transition-all ${
+            currentView === 'map'
+              ? 'text-brand-500 scale-110'
+              : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
+          }`}
+        >
+          <div className={`p-2 rounded-xl ${currentView === 'map' ? 'bg-brand-50' : 'bg-transparent'}`}>
+            <Map className="w-6 h-6" />
+          </div>
+          <span className="text-[10px] font-bold">Lugares</span>
         </button>
 
         <button

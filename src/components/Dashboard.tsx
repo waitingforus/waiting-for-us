@@ -13,6 +13,7 @@ import { SettingsModal } from './SettingsModal';
 import { AnniversaryWidget } from './AnniversaryWidget';
 import { BirthdayWidget } from './BirthdayWidget';
 import { RouletteScreen } from './RouletteScreen';
+import { MapScreen } from './MapScreen';
 import { BottomNav } from './BottomNav';
 import { Target } from 'lucide-react';
 import { goalConverter, contributionConverter, userProfileConverter, coupleSettingsConverter, type Goal, type Contribution, type UserProfile, type CoupleSettings } from '../lib/types';
@@ -29,7 +30,7 @@ export default function Dashboard({ user }: { user: any }) {
   const [allUsers, setAllUsers] = useState<Record<string, UserProfile>>({});
   const [coupleSettings, setCoupleSettings] = useState<CoupleSettings | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'roulette'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'roulette' | 'map'>('dashboard');
 
   useEffect(() => {
     const qGoals = query(collection(db, 'goals').withConverter(goalConverter), orderBy('createdAt', 'desc'));
@@ -82,6 +83,8 @@ export default function Dashboard({ user }: { user: any }) {
 
       {currentView === 'roulette' ? (
         <RouletteScreen settings={coupleSettings} />
+      ) : currentView === 'map' ? (
+        <MapScreen username={username} allUsers={allUsers} />
       ) : selectedGoal ? (
         <GoalDetail 
           goal={selectedGoal} 
