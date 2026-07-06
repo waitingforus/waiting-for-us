@@ -31,7 +31,7 @@ export function Header({
           {onNavigate && (
             <button
               onClick={() => onNavigate(currentView === 'dashboard' ? 'roulette' : 'dashboard')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold transition-all border shadow-sm ${
+              className={`hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl font-bold transition-all border shadow-sm ${
                 currentView === 'roulette' 
                   ? 'bg-brand-500 text-white border-brand-500 hover:bg-brand-600' 
                   : 'bg-white/40 text-slate-700 hover:bg-white border-white/50 hover:border-white'
@@ -54,7 +54,7 @@ export function Header({
 
           <button 
             onClick={onOpenSettings}
-            className="p-2 text-slate-600 hover:bg-white/40 hover:text-slate-900 rounded-xl transition-colors border border-transparent hover:border-white/50"
+            className="hidden sm:block p-2 text-slate-600 hover:bg-white/40 hover:text-slate-900 rounded-xl transition-colors border border-transparent hover:border-white/50"
             title="Configuración"
           >
             <Settings className="w-5 h-5" />

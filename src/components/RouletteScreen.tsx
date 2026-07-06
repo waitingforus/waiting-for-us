@@ -68,7 +68,7 @@ export function RouletteScreen({ settings }: RouletteScreenProps) {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 sm:px-8 pb-12 animate-fade-in mt-32">
+    <div className="w-full max-w-5xl mx-auto px-4 sm:px-8 pb-32 sm:pb-12 animate-fade-in mt-32">
       <div className="text-center mb-8">
         <h2 className="text-4xl font-extrabold text-slate-800 drop-shadow-sm flex items-center justify-center gap-3">
           <Utensils className="w-10 h-10 text-brand-500" />

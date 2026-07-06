@@ -13,6 +13,7 @@ import { SettingsModal } from './SettingsModal';
 import { AnniversaryWidget } from './AnniversaryWidget';
 import { BirthdayWidget } from './BirthdayWidget';
 import { RouletteScreen } from './RouletteScreen';
+import { BottomNav } from './BottomNav';
 import { Target } from 'lucide-react';
 import { goalConverter, contributionConverter, userProfileConverter, coupleSettingsConverter, type Goal, type Contribution, type UserProfile, type CoupleSettings } from '../lib/types';
 
@@ -89,7 +90,7 @@ export default function Dashboard({ user }: { user: any }) {
           onBack={() => setSelectedGoalId(null)} 
         />
       ) : (
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 pb-12 animate-fade-in mt-32">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 pb-32 sm:pb-12 animate-fade-in mt-32">
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start mb-8">
             
@@ -144,6 +145,12 @@ export default function Dashboard({ user }: { user: any }) {
         username={username}
         userProfile={userProfile}
         coupleSettings={coupleSettings}
+      />
+
+      <BottomNav 
+        currentView={currentView} 
+        onNavigate={setCurrentView} 
+        onOpenSettings={() => setIsSettingsOpen(true)} 
       />
     </>
   );
