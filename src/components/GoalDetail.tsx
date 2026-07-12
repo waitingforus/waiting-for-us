@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { collection, addDoc, doc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, doc, deleteDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { Card, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { ConfirmModal } from './ui/ConfirmModal';
-import { ArrowLeft, Trash2, Lightbulb } from 'lucide-react';
+import { ArrowLeft, Trash2, Lightbulb, Pencil } from 'lucide-react';
 import { contributionConverter, type Goal, type Contribution } from '../lib/types';
 
 const formatDate = (date: any) => {
@@ -18,6 +18,10 @@ export function GoalDetail({ goal, contributions, username, onBack }: { goal: Go
   const [loading, setLoading] = useState(false);
   const [showDeleteGoalModal, setShowDeleteGoalModal] = useState(false);
   const [contributionToDelete, setContributionToDelete] = useState<string | null>(null);
+  
+  const [isEditingGoal, setIsEditingGoal] = useState(false);
+  const [editName, setEditName] = useState(goal.name);
+  const [editAmount, setEditAmount] = useState(goal.targetAmount.toString());
 
   // Compute stats synchronously
   const totalSaved = contributions.reduce((sum, c) => sum + (c.amount || 0), 0);
@@ -84,6 +88,20 @@ export function GoalDetail({ goal, contributions, username, onBack }: { goal: Go
     setShowDeleteGoalModal(false);
   };
 
+  const handleUpdateGoal = async () => {
+    const numAmount = Number(editAmount);
+    if (!editName.trim() || isNaN(numAmount) || numAmount <= 0) return;
+    try {
+      await updateDoc(doc(db, 'goals', goal.id!), {
+        name: editName.trim(),
+        targetAmount: numAmount
+      });
+      setIsEditingGoal(false);
+    } catch (error) {
+      console.error("Error al actualizar la meta:", error);
+    }
+  };
+
   return (
     <div className="w-full max-w-9xl mx-auto px-4 sm:px-8 pb-12 animate-fade-in mt-32">
       <button 
@@ -99,21 +117,69 @@ export function GoalDetail({ goal, contributions, username, onBack }: { goal: Go
         <CardContent className="flex flex-col gap-8 pt-8">
           {/* Header de la Meta */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-4 mb-2">
-                <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">{goal.name}</h2>
-                <button 
-                  onClick={() => setShowDeleteGoalModal(true)} 
-                  className="text-slate-300 hover:text-red-500 transition-colors p-1"
-                  title="Eliminar meta de ahorro"
-                >
-                  <Trash2 className="w-5 h-5" />
-                </button>
+            {isEditingGoal ? (
+              <div className="w-full flex flex-col gap-4 animate-fade-in bg-white p-4 rounded-2xl border border-brand-100 shadow-sm">
+                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                  <div className="flex-1 w-full">
+                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">Nombre</label>
+                    <Input 
+                      value={editName}
+                      onChange={e => setEditName(e.target.value)}
+                      className="w-full bg-slate-50"
+                      placeholder="Nombre del objetivo"
+                    />
+                  </div>
+                  <div className="flex-1 w-full">
+                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">Monto</label>
+                    <Input 
+                      type="number"
+                      value={editAmount}
+                      onChange={e => setEditAmount(e.target.value)}
+                      className="w-full bg-slate-50"
+                      prefixStr="S/"
+                      placeholder="Monto"
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2 justify-end mt-2">
+                  <Button variant="secondary" onClick={() => setIsEditingGoal(false)} className="py-2 px-4 text-sm">
+                    Cancelar
+                  </Button>
+                  <Button onClick={handleUpdateGoal} className="py-2 px-4 text-sm">
+                    Guardar
+                  </Button>
+                </div>
               </div>
-              <p className="text-5xl font-black text-brand-500 tracking-tighter drop-shadow-sm">
-                S/ {totalSaved} <span className="text-2xl text-slate-400 font-bold">/ S/ {goal.targetAmount}</span>
-              </p>
-            </div>
+            ) : (
+              <div>
+                <div className="flex items-center gap-4 mb-2">
+                  <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">{goal.name}</h2>
+                  <div className="flex items-center gap-1">
+                    <button 
+                      onClick={() => {
+                        setEditName(goal.name);
+                        setEditAmount(goal.targetAmount.toString());
+                        setIsEditingGoal(true);
+                      }} 
+                      className="text-slate-300 hover:text-brand-500 transition-colors p-1"
+                      title="Editar meta de ahorro"
+                    >
+                      <Pencil className="w-5 h-5" />
+                    </button>
+                    <button 
+                      onClick={() => setShowDeleteGoalModal(true)} 
+                      className="text-slate-300 hover:text-red-500 transition-colors p-1"
+                      title="Eliminar meta de ahorro"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+                <p className="text-5xl font-black text-brand-500 tracking-tighter drop-shadow-sm">
+                  S/ {totalSaved} <span className="text-2xl text-slate-400 font-bold">/ S/ {goal.targetAmount}</span>
+                </p>
+              </div>
+            )}
           </div>
           
           {/* Barra de progreso */}
